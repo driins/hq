@@ -4,7 +4,6 @@ import numpy as np
 import json
 import pickle
 import random
-import os
 from string import punctuation
 
 app = Flask(__name__)
@@ -45,9 +44,10 @@ def get_bot_response(user_input):
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    user_input = request.data.decode('utf-8')  # Mendekode data dari byte menjadi string
+    data = request.get_json()
+    user_input = data.get('user_input', '')
     response = get_bot_response(user_input)
     return jsonify({'bot_response': response})
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+    app.run(debug=True)
