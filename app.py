@@ -27,9 +27,9 @@ def preprocess_string(string):
     string = ''.join(ch for ch in string if ch not in exclude)
     return string
 
-def get_bot_response(user_input):
-    user_input = preprocess_string(user_input)
-    prob = model.predict([user_input])
+def get_response(input):
+    input = preprocess_string(input)
+    prob = model.predict([input])
     results = le.classes_[prob.argmax()]
 
     if prob.max() == 0.9999302625656128:
@@ -45,9 +45,9 @@ def get_bot_response(user_input):
 @app.route('/chat', methods=['POST'])
 def chat():
     data = request.get_json()
-    user_input = data.get('user_input', '')
-    response = get_bot_response(user_input)
-    return jsonify({'bot_response': response})
+    input = data.get('input', '')
+    response = get_response(input)
+    return jsonify({'response': response})
 
 if __name__ == "__main__":
     app.run(debug=True)
